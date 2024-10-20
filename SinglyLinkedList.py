@@ -8,7 +8,7 @@ T = TypeVar('T')
 # 単方向リスト
 ####################
 class SinglyLinkedList:
-    # 初期化
+    # init
     def __init__(self):
         self.head = None
         self.tail = None
@@ -85,7 +85,6 @@ class SinglyLinkedList:
             print(f"but you should select a index greater than 0.")
             sys.exit(1)
 
-        #挿入位置が先頭あるいは最初の挿入なら先頭ノードの作成
         if index == 0 or not self.head:
             self.head = Node(val, self.head)
         else:
@@ -100,6 +99,25 @@ class SinglyLinkedList:
             crr.tail = new_node
         self.length += 1
     
+    # discard
+    def discard(self, x: Any):
+        n = 0
+        crr = self.head
+        if crr.val == x:
+            return self.popleft() is not None
+        while crr:
+            if crr.tail is None:
+                return False
+            if crr.tail.val == x:
+                if crr.tail.tail == None:
+                    return self.pop() is not None
+                else:
+                    crr.tail = crr.tail.tail
+                    return True
+            crr = crr.tail
+        return False
+
+    # index
     def index(self, x: int) -> int:
         n = 0
         crr = self.head
@@ -110,6 +128,7 @@ class SinglyLinkedList:
             crr = crr.tail
         return -1
     
+    # traversal
     def traversal(self) -> str:
         res = []
         crr = self.head
