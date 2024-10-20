@@ -1,0 +1,125 @@
+from typing import List, TypeVar, Any, Optional
+from . import Node
+import sys
+
+T = TypeVar('T')
+
+####################
+# 単方向リスト
+####################
+class SinglyLinkedList:
+    # 初期化
+    def __init__(self):
+        self.head = None
+        self.tail = None
+        self.length = 0
+
+    # append
+    def append(self, x: Any) -> None:
+        new_node = Node(x, None)
+
+        if self.head is None:
+            self.head = new_node
+            self.tail = new_node
+        else:
+            self.tail.tail = new_node
+            self.tail = new_node
+        
+        self.length += 1
+
+    # appendleft
+    def appendleft(self, x: Any):
+        new_node = Node(x, None)
+        if self.head is None:
+            self.head = new_node
+            self.tail = new_node
+        else:
+            new_node.tail = self.head
+            self.head = new_node
+
+        self.length += 1
+
+
+    # pop
+    def pop(self) -> Optional[Any]:
+        res = None
+        if self.head is None:
+            return res
+
+        crr = self.head
+        target = crr
+        while crr.tail:
+            target = crr
+            crr = target.tail
+
+        res = crr.val
+        self.tail = target
+        self.tail.tail = None
+        self.length -= 1
+        if self.length == 0:
+            self.head = None
+            self.tail = None
+        return res
+    
+    # popleft
+    def popleft(self) -> Optional[Any]:
+        if self.head is None:
+            return None
+        
+        crr = self.head
+        self.head = crr.tail
+        self.length -= 1
+        if self.length == 0:
+            self.tail = None        
+        return crr.val
+
+    # insert
+    def insert(self, index, val) -> None:
+        if self.length < index:
+            print(f"you are choiced index is {index}.")
+            print(f"but you should select a index less than {self.length}.")
+            sys.exit(1)
+        
+        if index < 0:
+            print(f"you are choiced index is {index}.")
+            print(f"but you should select a index greater than 0.")
+            sys.exit(1)
+
+        #挿入位置が先頭あるいは最初の挿入なら先頭ノードの作成
+        if index == 0 or not self.head:
+            self.head = Node(val, self.head)
+        else:
+            crr = self.head
+            while crr.tail:
+                index -= 1
+                if index == 0:
+                    break
+                crr = crr.tail
+
+            new_node = Node(val, crr.tail)
+            crr.tail = new_node
+        self.length += 1
+    
+    def index(self, x: int) -> int:
+        n = 0
+        crr = self.head
+        while crr:
+            if crr.val == x:
+                return n
+            n += 1
+            crr = crr.tail
+        return -1
+    
+    def traversal(self) -> str:
+        res = []
+        crr = self.head
+        while crr:
+            res.append(crr.val)
+            crr = crr.tail
+        return str(res)
+    
+    def __len__(self) -> int:
+        return self.length
+    
+    def __str__(self) -> str:
+        return self.traversal()
